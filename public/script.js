@@ -58,9 +58,25 @@ async function fetchStations(networkId) {
     try {
         const response = await fetch(`/api/bikes/stations?network_id=${networkId}`);
         const data = await response.json();
-        // TODO: Implement station display
-        console.log('Stations:', data);
+        displayStations(data.network);
     } catch (error) {
         console.error('Error:', error);
     }
+}
+
+function displayStations(network) {
+    const container = document.getElementById('stationsContainer');
+    container.innerHTML = `
+        <h2>${network.name} Stations</h2>
+        <div class="stations-grid">
+            ${network.stations.map(station => `
+                <div class="station-card">
+                    <h3>${station.name}</h3>
+                    <p>Free Bikes: ${station.free_bikes}</p>
+                    <p>Empty Slots: ${station.empty_slots}</p>
+                    <p>Last Updated: ${new Date(station.timestamp).toLocaleString()}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
 }
