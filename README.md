@@ -35,7 +35,7 @@ npm install
    - Add the following variables:
 ```
 SUPABASE_URL= "https://fbqdpuemmxhtrauhodec.supabase.co"
-SUPABASE_KEY=your_supabase_key
+SUPABASE_KEY= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZicWRwdWVtbXhodHJhdWhvZGVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQyODQzNDMsImV4cCI6MjA0OTg2MDM0M30.pUD3sqfRkxbFuspCwfsGS7SspjcmDlj0EAVbDHyh8yY"
 ```
 
 ### Running the Application
