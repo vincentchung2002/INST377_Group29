@@ -21,8 +21,8 @@ Our application supports the following browsers:
 ### Installation
 1. Clone the repository:
 ```
-git clone https://github.com/[your-username]/citybike-finder.git
-cd citybike-finder
+git clone https://github.com/vincentchung2002/INST377_Group29.git
+cd INST377_Group29
 ```
 
 2. Install dependencies:
@@ -34,8 +34,8 @@ npm install
    - Create a `.env` file in the root directory
    - Add the following variables:
 ```
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
+SUPABASE_URL= "https://fbqdpuemmxhtrauhodec.supabase.co"
+SUPABASE_KEY= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZicWRwdWVtbXhodHJhdWhvZGVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQyODQzNDMsImV4cCI6MjA0OTg2MDM0M30.pUD3sqfRkxbFuspCwfsGS7SspjcmDlj0EAVbDHyh8yY"
 ```
 
 ### Running the Application

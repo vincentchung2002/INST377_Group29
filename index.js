@@ -4,14 +4,15 @@ const bodyParser = require("body-parser");
 
 const init = require(__dirname + "/init.js");
 const helpers = require(__dirname + "/helpers.js");
+require('dotenv').config(); 
 
 const app = express();
 const port = 3000;
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
-const supabaseUrl = "https://fbqdpuemmxhtrauhodec.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZicWRwdWVtbXhodHJhdWhvZGVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQyODQzNDMsImV4cCI6MjA0OTg2MDM0M30.pUD3sqfRkxbFuspCwfsGS7SspjcmDlj0EAVbDHyh8yY";
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = supabaseClient.createClient(supabaseUrl, supabaseKey);
 
 app.get("/api/bikes/networks/default", (req, res) => {
@@ -34,5 +35,6 @@ app.get("/api/bikes/stations", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`App is listening on port ${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });
+
