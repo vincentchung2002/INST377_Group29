@@ -6,7 +6,7 @@ async function initNetworks(supabase, bikeNetworksApi) {
         console.error(error);
         return;
     }
-    if (count["count"] > 0) {
+    if (count > 0) {
         return;
     }
     const networks = await fetch(bikeNetworksApi)

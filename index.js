@@ -16,22 +16,24 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = supabaseClient.createClient(supabaseUrl, supabaseKey);
 
-app.get("/api/bikes/networks/default", (req, res) => {
-    init.initNetworks(supabase, "https://api.citybik.es/v2/networks");
-    res.send("default");
+init.initNetworks(supabase, "https://api.citybik.es/v2/networks");
+
+app.get("/api/bikes/networks/default", async (req, res) => {
+    const networks = await helpers.getFirstFewNetworks(100, supabase);
+    res.send(networks);
 });
 
 app.get("/api/bikes/networks/search", (req, res) => {
     res.send("search");
 });
 
-app.get("/api/bikes/stations", (req, res) => {
+app.get("/api/bikes/stations", async (req, res) => {
     if (!req.query["network_id"]) {
         res.status(404);
         res.send("Missing parameter: network_id");
         return;
     }
-    const stations = helpers.getStations(req.query["network_id"].toLocaleLowerCase(), supabase, "https://api.citybik.es/v2/networks/");
+    const stations = await helpers.getStations(req.query["network_id"].toLocaleLowerCase(), supabase, "https://api.citybik.es/v2/networks/");
     res.send(stations);
 });
 

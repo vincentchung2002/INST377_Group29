@@ -1,13 +1,13 @@
 async function getStations(name_id, supabase, bikeStationApiStem) {
-    const {data, error} = await supabase
+    const { data, error } = await supabase
         .from("stations")
         .select()
         .eq("name_id", name_id);
     if (error) {
         console.log(error);
     }
-    if (data["data"]) {
-        return data["data"];
+    if (data) {
+        return data;
     }
     const newStations = await fetch(`${bikeStationApiStem}${name_id}`)
         .then(res => res.json())
@@ -31,4 +31,12 @@ async function getStations(name_id, supabase, bikeStationApiStem) {
     }
 }
 
-module.exports = { getStations };
+async function getFirstFewNetworks(num, supabase) {
+    const { data, error } = await supabase
+        .from("networks")
+        .select()
+        .limit(num);
+    return data;
+}
+
+module.exports = { getStations, getFirstFewNetworks };
