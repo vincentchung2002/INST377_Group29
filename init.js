@@ -1,18 +1,18 @@
-async function init_networks(supabase, bikeNetworksApi) {
-    const { data, error } = await supabase
+async function initNetworks(supabase, bikeNetworksApi) {
+    const { count, error } = await supabase
         .from("networks")
-        .select("*", { count: "exact", head: true });
+        .select("*", { count: "estimated", head: true });
     if (error) {
         console.error(error);
         return;
     }
-    if (data["count"] > 0) {
+    if (count["count"] > 0) {
         return;
     }
     const networks = await fetch(bikeNetworksApi)
         .then(res => res.json())
         .then(res => res["networks"]);
-    for (const nw in networks.values()) {
+    for (const nw of networks.values()) {
         const { error } = await supabase
             .from("networks")
             .insert({
@@ -23,11 +23,11 @@ async function init_networks(supabase, bikeNetworksApi) {
                 lng: nw["location"]["longitude"],
                 city: nw["location"]["city"],
                 country: nw["location"]["country"],
-            }
-        );
+            });
         if (error) {
             console.error(error);
-            return;
         }
     }
 }
+
+module.exports = { initNetworks };
