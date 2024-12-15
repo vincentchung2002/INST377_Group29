@@ -19,6 +19,7 @@
   "homepage": "https://github.com/vincentchung2002/INST377_Group29#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.47.7",
+    "dotenv": "^16.4.7",
     "nodemon": "^3.1.9"
   }
 }

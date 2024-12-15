@@ -2,9 +2,10 @@ const express = require("express");
 const supabaseClient = require("@supabase/supabase-js");
 const bodyParser = require("body-parser");
 
+require("dotenv").config();
+
 const init = require(__dirname + "/init.js");
 const helpers = require(__dirname + "/helpers.js");
-require('dotenv').config(); 
 
 const app = express();
 const port = 3000;
