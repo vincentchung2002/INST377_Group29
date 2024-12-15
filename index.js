@@ -1,7 +1,10 @@
 const express = require("express");
+const supabaseClient = require("@supabase/supabase-js");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = 3000;
+app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 const supabaseUrl = "https://fbqdpuemmxhtrauhodec.supabase.co";
