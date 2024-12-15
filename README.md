@@ -21,7 +21,7 @@ Our application supports the following browsers:
 ### Installation
 1. Clone the repository:
 ```
-git clone https://github.com/[your-username]/citybike-finder.git
+git clone https://github.com/vincentchung2002/citybike-finder.git
 cd citybike-finder
 ```
 
