@@ -41,15 +41,9 @@ SUPABASE_KEY= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 ### Running the Application
 1. Start the development server:
 ```
-npm run dev
+npm start
 ```
 2. Open your browser and navigate to `http://localhost:3000`
-
-### Running Tests
-Execute the test suite:
-```
-npm test
-```
 
 ### API Endpoints
 
