@@ -12,6 +12,7 @@ const supabaseKey = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 const supabase = supabaseClient.createClient(supabaseUrl, supabaseKey);
 
 app.get("/api/bikes/networks/default", (req, res) => {
+    init_networks(supabase, "https://api.citybik.es/v2/networks");
     res.send("default");
 });
 
