@@ -34,7 +34,7 @@ npm install
    - Create a `.env` file in the root directory
    - Add the following variables:
 ```
-SUPABASE_URL=your_supabase_url
+SUPABASE_URL= "https://fbqdpuemmxhtrauhodec.supabase.co"
 SUPABASE_KEY=your_supabase_key
 ```
 
