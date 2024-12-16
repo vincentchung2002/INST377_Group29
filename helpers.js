@@ -40,6 +40,10 @@ async function getFirstFewNetworks(num, supabase) {
 }
 
 async function searchNetworks(queries, supabase) {
+    const textSearchConfig = {
+        type: "websearch",
+        config: "english",
+    };
     let results = [];
     if (queries["latitude"]) {
         const { data, error } = await supabase.from("networks").select().eq("lat", queries["latitude"]);
@@ -49,29 +53,32 @@ async function searchNetworks(queries, supabase) {
         const { data, error } = await supabase.from("networks").select().eq("lng", queries["longitude"]);
         results.concat(data);
     }
-    if (queries["latitude"]) {
-        const { data, error } = await supabase.from("networks").select().eq("lat", queries["latitude"]);
-        results.concat(data);
-    }
     let loc_results = [];
     if (queries["location"]) {
-        const { data, error } = await supabase.from("networks").select()
-            .textSearch("city", queries["name"], {
-                type: "websearch",
-                config: "english",
-            });
-        loc_results.concat(data);
+        const { d1, e1 } = await supabase.from("networks").select()
+            .textSearch("city", queries["name"], textSearchConfig);
+        const { d2, e2 } = await supabase.from("networks").select()
+            .textSearch("country", queries["name"], textSearchConfig);
+        loc_results.concat(d1, d2);
     }
-    let name_results = [];
+    let name_results = null;
     if (queries["name"]) {
-        let { data, error } = await supabase.from("networks").select()
-            .textSearch("name", queries["name"], {
-                type: "websearch",
-                config: "english",
-            });
-        name_results.concat(data);
+        let { d1, e1 } = await supabase.from("networks").select()
+            .textSearch("name", queries["name"], textSearchConfig);
+        let { d2, e2 } = await supabase.from("networks").select()
+            .textSearch("name", queries["name_id"], textSearchConfig);
+        let { d3, e3 } = await supabase.from("networks").select()
+            .textSearch("name", queries["company"], textSearchConfig);
+        name_results.concat(d1, d2, d3);
     }
-    return results + loc_results + name_results;
+    if (loc_results && name_results) {
+        results.concat(loc_results.filter(elem => (array2.indexOf(elem) !== -1)));
+    } else if (loc_results) {
+        results.concat(loc_results);
+    } else {
+        results.concat(name_results);
+    }
+    return new Array(new Set(results));
 }
 
 module.exports = { getStations, getFirstFewNetworks, searchNetworks };
