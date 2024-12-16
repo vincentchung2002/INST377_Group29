@@ -58,15 +58,13 @@ async function searchNetworks(queries, supabase) {
         let query = supabase.from("networks").select();
         
         if (queries.name) {
-            query = query.ilike('name', `%${queries.name}%`);
-        }
-        
-        if (queries.location) {
+            query = query.ilike('name_id', `%${queries.name}%`);
+        } else if (queries.location) {
             query = query.or(`city.ilike.%${queries.location}%,country.ilike.%${queries.location}%`);
         }
 
         const { data, error } = await query.order('city').limit(50);
-        
+        console.log(data);
         if (error) throw error;
         return data || [];
     } catch (error) {
