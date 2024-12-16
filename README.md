@@ -1,6 +1,7 @@
 # INST377_Group29
 
 # CityBike Finder
+# https://inst-377-group29-o3zunwutv-vincentchung2002s-projects.vercel.app/
 
 ## Description
 CityBike Finder is a web application that helps users locate available rental bikes from public bike share systems worldwide. The application provides real-time information about bike networks and station availability, leveraging the CityBikes API and Supabase for efficient data management. Users can search for bike networks by name or location and get detailed information about station status and bike availability.
