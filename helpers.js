@@ -39,4 +39,39 @@ async function getFirstFewNetworks(num, supabase) {
     return data;
 }
 
-module.exports = { getStations, getFirstFewNetworks };
+async function searchNetworks(queries, supabase) {
+    let results = [];
+    if (queries["latitude"]) {
+        const { data, error } = await supabase.from("networks").select().eq("lat", queries["latitude"]);
+        results.concat(data);
+    }
+    if (queries["longitude"]) {
+        const { data, error } = await supabase.from("networks").select().eq("lng", queries["longitude"]);
+        results.concat(data);
+    }
+    if (queries["latitude"]) {
+        const { data, error } = await supabase.from("networks").select().eq("lat", queries["latitude"]);
+        results.concat(data);
+    }
+    let loc_results = [];
+    if (queries["location"]) {
+        const { data, error } = await supabase.from("networks").select()
+            .textSearch("city", queries["name"], {
+                type: "websearch",
+                config: "english",
+            });
+        loc_results.concat(data);
+    }
+    let name_results = [];
+    if (queries["name"]) {
+        let { data, error } = await supabase.from("networks").select()
+            .textSearch("name", queries["name"], {
+                type: "websearch",
+                config: "english",
+            });
+        name_results.concat(data);
+    }
+    return results + loc_results + name_results;
+}
+
+module.exports = { getStations, getFirstFewNetworks, searchNetworks };

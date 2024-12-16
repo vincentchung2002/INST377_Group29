@@ -19,13 +19,18 @@ const supabase = supabaseClient.createClient(supabaseUrl, supabaseKey);
 init.initNetworks(supabase, "https://api.citybik.es/v2/networks");
 
 app.get("/api/bikes/networks/default", async (req, res) => {
-    const networks = await helpers.getFirstFewNetworks(100, supabase);
+    const networks = await helpers.getFirstFewNetworks(50, supabase);
     res.send(networks);
 });
 
 app.get("/api/bikes/networks/search", async (req, res) => {
-
-    res.send(await helpers.getFirstFewNetworks(100, supabase));
+    if (!req.query["name"] && !req.query["location"] && !req.query["latitude"] && !req.query["longitude"]) {
+        const networks = await helpers.getFirstFewNetworks(50, supabase);
+        res.send(networks);
+        return;
+    }
+    const networks = await helpers.searchNetworks(req.query, supabase);
+    res.send(networks);
 });
 
 app.get("/api/bikes/stations", async (req, res) => {
