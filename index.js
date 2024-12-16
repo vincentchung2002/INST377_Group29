@@ -23,8 +23,9 @@ app.get("/api/bikes/networks/default", async (req, res) => {
     res.send(networks);
 });
 
-app.get("/api/bikes/networks/search", (req, res) => {
-    res.send("search");
+app.get("/api/bikes/networks/search", async (req, res) => {
+
+    res.send(await helpers.getFirstFewNetworks(100, supabase));
 });
 
 app.get("/api/bikes/stations", async (req, res) => {
