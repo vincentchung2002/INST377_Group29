@@ -27,7 +27,10 @@ cd INST377_Group29
 
 2. Install dependencies:
 ```
-npm install
+npm install nodemon
+npm install express
+npm install @supabase/supabase-js
+npm install dotenv
 ```
 
 3. Set up environment variables:
