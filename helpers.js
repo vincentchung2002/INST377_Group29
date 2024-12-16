@@ -64,7 +64,6 @@ async function searchNetworks(queries, supabase) {
         }
 
         const { data, error } = await query.order('city').limit(50);
-        console.log(data);
         if (error) throw error;
         return data || [];
     } catch (error) {
