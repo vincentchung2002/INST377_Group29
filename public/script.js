@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchNetworks() {
     try {
-        const response = await fetch('/api/bikes/networks/default');
-        const data = await response.json();
-        displayNetworks(data.networks);
+        const data = await fetch('/api/bikes/networks/default')
+            .then(response => response.json());
+        displayNetworks(data);
     } catch (error) {
         console.error('Error:', error);
     }
@@ -16,9 +16,9 @@ async function fetchNetworks() {
 function displayNetworks(networks) {
     const container = document.getElementById('networksContainer');
     container.innerHTML = networks.map(network => `
-        <div class="network-card" data-network-id="${network.id}">
+        <div class="network-card" data-network-id="${network.name_id}">
             <div class="network-name">${network.name}</div>
-            <div class="network-location">Location: ${network.location.city}, ${network.location.country}</div>
+            <div class="network-location">Location: ${network.city}, ${network.country}</div>
         </div>
     `).join('');
 
@@ -34,42 +34,41 @@ function displayNetworks(networks) {
 function setupSearch() {
     const networkSearch = document.getElementById('networkSearch');
     const locationSearch = document.getElementById('locationSearch');
+    const latitudeSearch = document.getElementById('latitudeSearch');
+    const longitudeSearch = document.getElementById('longitudeSearch');
 
     networkSearch.addEventListener('input', filterNetworks);
     locationSearch.addEventListener('input', filterNetworks);
+    latitudeSearch.addEventListener('input', filterNetworks);
+    longitudeSearch.addEventListener('input', filterNetworks);
 }
 
-function filterNetworks() {
+async function filterNetworks() {
     const networkQuery = document.getElementById('networkSearch').value.toLowerCase();
     const locationQuery = document.getElementById('locationSearch').value.toLowerCase();
+    const latitudeQuery = document.getElementById('latitudeSearch').value;
+    const longitudeQuery = document.getElementById('longitudeSearch').value;
     
-    document.querySelectorAll('.network-card').forEach(card => {
-        const name = card.querySelector('.network-name').textContent.toLowerCase();
-        const location = card.querySelector('.network-location').textContent.toLowerCase();
-        
-        const matchesNetwork = name.includes(networkQuery);
-        const matchesLocation = location.includes(locationQuery);
-        
-        card.style.display = (matchesNetwork && matchesLocation) ? 'block' : 'none';
-    });
+    const networks = await fetch(`/api/bikes/networks/search?name=${networkQuery}&location=${locationQuery}&latitude=${latitudeQuery}&longitude=${longitudeQuery}`);
+    displayNetworks(networks);
 }
 
 async function fetchStations(networkId) {
     try {
-        const response = await fetch(`/api/bikes/stations?network_id=${networkId}`);
-        const data = await response.json();
-        displayStations(data.network);
+        const data = await fetch(`/api/bikes/stations?network_id=${networkId}`)
+            .then(response => response.json());
+        displayStations(networkId, data);
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
-function displayStations(network) {
+function displayStations(networkId, stations) {
     const container = document.getElementById('stationsContainer');
     container.innerHTML = `
-        <h2>${network.name} Stations</h2>
+        <h2>Stations in the ${networkId} network</h2>
         <div class="stations-grid">
-            ${network.stations.map(station => `
+            ${stations.map(station => `
                 <div class="station-card">
                     <h3>${station.name}</h3>
                     <p>Free Bikes: ${station.free_bikes}</p>
