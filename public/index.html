@@ -7,18 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header-container">
-        <h1>CityBike Finder</h1>
-        <a href="about.html" class="about-link">About Us</a>
-    </div>
-    
-    <div class="search-container">
-        <input type="text" id="networkSearch" placeholder="Search networks...">
-        <input type="text" id="locationSearch" placeholder="Search by location...">
-    </div>
+    <div class="container">
+        <div class="header-container">
+            <h1>CityBike Finder</h1>
+            <a href="about.html" class="about-link">About Us</a>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="networkSearch" placeholder="Search by network name...">
+            <input type="text" id="locationSearch" placeholder="Search by city or country...">
+        </div>
 
-    <div id="networksContainer"></div>
-    <div id="stationsContainer"></div>
+        <div class="content-container">
+            <div id="networksContainer" class="networks-container"></div>
+            <div id="stationsContainer" class="stations-container"></div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
