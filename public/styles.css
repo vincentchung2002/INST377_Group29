@@ -1,86 +1,139 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f5f5f5;
-}
-
-h1 {
-    color: #333;
-    margin-bottom: 30px;
-}
-
-.search-container {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.search-container input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    flex: 1;
-}
-
-.network-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.network-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.network-name {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.network-location {
-    color: #666;
-}
-
-.stations-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-}
-
-.station-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px;
-}
-
-.header-container h1 {
-    margin: 0;
-    font-size: 2rem;
+    margin-bottom: 30px;
 }
 
 .about-link {
     text-decoration: none;
-    font-size: 1rem;
-    font-weight: bold;
+    color: #007bff;
+    font-weight: 500;
 }
 
-.about-link:hover {
-    text-decoration: underline;
+.search-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.content-container {
+    display: grid;
+    gap: 30px;
+}
+
+.networks-container {
+    display: grid;
+    gap: 15px;
+}
+
+.network-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.network-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.network-card.selected {
+    border: 2px solid #007bff;
+    background-color: #f8f9ff;
+}
+
+.network-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.network-location,
+.network-company {
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.stations-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.network-summary {
+    background: #f8f9ff;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.stations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.station-card {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.station-stats {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: #666;
+}
+
+.timestamp {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: #dc3545;
+    background: #f8d7da;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
 }

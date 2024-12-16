@@ -5,28 +5,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchNetworks() {
     try {
-        const data = await fetch('/api/bikes/networks/default')
-            .then(response => response.json());
-        displayNetworks(data);
+        const response = await fetch('/api/bikes/networks/default');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = JSON.parse(response);
+        if (data) {
+            displayNetworks(data);
+        }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching networks:', error);
+        showError('networksContainer', 'Failed to load networks. Please try again later.');
     }
 }
 
 function displayNetworks(networks) {
     const container = document.getElementById('networksContainer');
+    
+    if (!networks || networks.length === 0) {
+        container.innerHTML = '<p>No networks found</p>';
+        return;
+    }
+
     container.innerHTML = networks.map(network => `
         <div class="network-card" data-network-id="${network.name_id}">
-            <div class="network-name">${network.name}</div>
-            <div class="network-location">Location: ${network.city}, ${network.country}</div>
+            <div class="network-name">${network.name || 'Unnamed Network'}</div>
+            <div class="network-location">Location: ${network.city || 'Unknown City'}, ${network.country || 'Unknown Country'}</div>
+            <div class="network-company">Network Company: ${network.company || 'Unknown Operator'}</div>
         </div>
     `).join('');
 
-    // Add click listeners to each network card
     document.querySelectorAll('.network-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', async () => {
+            document.querySelectorAll('.network-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            
             const networkId = card.dataset.networkId;
-            fetchStations(networkId);
+            await fetchStations(networkId);
         });
     });
 }
@@ -37,45 +50,108 @@ function setupSearch() {
     const latitudeSearch = document.getElementById('latitudeSearch');
     const longitudeSearch = document.getElementById('longitudeSearch');
 
-    networkSearch.addEventListener('input', filterNetworks);
-    locationSearch.addEventListener('input', filterNetworks);
-    latitudeSearch.addEventListener('input', filterNetworks);
-    longitudeSearch.addEventListener('input', filterNetworks);
+    function debounce(func, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    const performSearch = debounce(() => {
+        const name = networkSearch.value.trim();
+        const location = locationSearch.value.trim();
+        
+        if (name || location) {
+            searchNetworks(name, location);
+        } else {
+            fetchNetworks();
+        }
+    }, 300);
+
+    networkSearch.addEventListener('input', performSearch);
+    locationSearch.addEventListener('input', performSearch);
+    latitudeSearch.addEventListener('input', performSearch);
+    longitudeSearch.addEventListener('input', performSearch);
 }
 
-async function filterNetworks() {
-    const networkQuery = document.getElementById('networkSearch').value.toLowerCase();
-    const locationQuery = document.getElementById('locationSearch').value.toLowerCase();
-    const latitudeQuery = document.getElementById('latitudeSearch').value;
-    const longitudeQuery = document.getElementById('longitudeSearch').value;
-    
-    const networks = await fetch(`/api/bikes/networks/search?name=${networkQuery}&location=${locationQuery}&latitude=${latitudeQuery}&longitude=${longitudeQuery}`);
-    displayNetworks(networks);
+async function searchNetworks(name, location, latitude, longitude) {
+    try {
+        const params = new URLSearchParams();
+        if (name) params.append('name', name);
+        if (location) params.append('location', location);
+        if (latitude) params.append('latitude', latitude);
+        if (longitude) params.append('longitude', longitude);
+
+        const response = await fetch(`/api/bikes/networks/search?${params}`);
+        if (!response.ok) throw new Error('Search failed');
+        
+        const data = JSON.parse(response);
+        if (data) {
+            displayNetworks(data);
+        }
+    } catch (error) {
+        console.error('Error searching networks:', error);
+        showError('networksContainer', 'Search failed. Please try again.');
+    }
 }
 
 async function fetchStations(networkId) {
     try {
-        const data = await fetch(`/api/bikes/stations?network_id=${networkId}`)
-            .then(response => response.json());
-        displayStations(networkId, data);
+        const response = await fetch(`/api/bikes/stations?network_id=${networkId}`);
+        if (!response.ok) throw new Error('Failed to fetch stations');
+        const data = JSON.parse(response);
+        if (data) {
+            displayStations(data);
+        }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching stations:', error);
+        showError('stationsContainer', 'Failed to load stations. Please try again.');
     }
 }
 
-function displayStations(networkId, stations) {
+function displayStations(stations) {
     const container = document.getElementById('stationsContainer');
+    
+    if (!stations || stations.length === 0) {
+        container.innerHTML = '<p>No stations found for this network</p>';
+        return;
+    }
+
+    const totalBikes = stations.reduce((sum, station) => sum + (station.free_bikes || 0), 0);
+    const totalSlots = stations.reduce((sum, station) => sum + (station.empty_slots || 0), 0);
+
     container.innerHTML = `
-        <h2>Stations in the ${networkId} network</h2>
+        <h2>Available Stations</h2>
+        <div class="network-summary">
+            <p>Total Available Bikes: ${totalBikes}</p>
+            <p>Total Empty Slots: ${totalSlots}</p>
+        </div>
         <div class="stations-grid">
             ${stations.map(station => `
                 <div class="station-card">
-                    <h3>${station.name}</h3>
-                    <p>Free Bikes: ${station.free_bikes}</p>
-                    <p>Empty Slots: ${station.empty_slots}</p>
-                    <p>Last Updated: ${new Date(station.timestamp).toLocaleString()}</p>
+                    <div class="station-name">${station.name || 'Unnamed Station'}</div>
+                    <div class="station-stats">
+                        <div class="stat-label">Available Bikes:</div>
+                        <div class="stat-value">${station.free_bikes || 0}</div>
+                        <div class="stat-label">Empty Slots:</div>
+                        <div class="stat-value">${station.empty_slots || 0}</div>
+                    </div>
+                    <div class="station-location">
+                        <div class="stat-label">Location:</div>
+                        <div class="stat-value">Lat: ${station.lat}, Lng: ${station.lng}</div>
+                    </div>
+                    <div class="timestamp">
+                        Last Updated: ${new Date(station.timestamp).toLocaleString()}
+                    </div>
                 </div>
             `).join('')}
         </div>
+    `;
+}
+
+function showError(containerId, message) {
+    document.getElementById(containerId).innerHTML = `
+        <p class="error-message">${message}</p>
     `;
 }
