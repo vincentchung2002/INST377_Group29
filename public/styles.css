@@ -62,3 +62,25 @@ h1 {
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+}
+
+.header-container h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.about-link {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.about-link:hover {
+    text-decoration: underline;
+}
