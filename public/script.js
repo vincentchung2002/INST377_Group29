@@ -7,9 +7,10 @@ async function fetchNetworks() {
     try {
         const response = await fetch('/api/bikes/networks/default');
         if (!response.ok) throw new Error('Network response was not ok');
-        const data = JSON.parse(response);
-        if (data) {
-            displayNetworks(data);
+        
+        const data = await response.json();
+        if (data && data.networks) {
+            displayNetworks(data.networks);
         }
     } catch (error) {
         console.error('Error fetching networks:', error);
@@ -47,8 +48,6 @@ function displayNetworks(networks) {
 function setupSearch() {
     const networkSearch = document.getElementById('networkSearch');
     const locationSearch = document.getElementById('locationSearch');
-    const latitudeSearch = document.getElementById('latitudeSearch');
-    const longitudeSearch = document.getElementById('longitudeSearch');
 
     function debounce(func, wait) {
         let timeout;
@@ -71,24 +70,20 @@ function setupSearch() {
 
     networkSearch.addEventListener('input', performSearch);
     locationSearch.addEventListener('input', performSearch);
-    latitudeSearch.addEventListener('input', performSearch);
-    longitudeSearch.addEventListener('input', performSearch);
 }
 
-async function searchNetworks(name, location, latitude, longitude) {
+async function searchNetworks(name, location) {
     try {
         const params = new URLSearchParams();
         if (name) params.append('name', name);
         if (location) params.append('location', location);
-        if (latitude) params.append('latitude', latitude);
-        if (longitude) params.append('longitude', longitude);
 
         const response = await fetch(`/api/bikes/networks/search?${params}`);
         if (!response.ok) throw new Error('Search failed');
         
-        const data = JSON.parse(response);
-        if (data) {
-            displayNetworks(data);
+        const data = await response.json();
+        if (data && data.networks) {
+            displayNetworks(data.networks);
         }
     } catch (error) {
         console.error('Error searching networks:', error);
@@ -100,9 +95,10 @@ async function fetchStations(networkId) {
     try {
         const response = await fetch(`/api/bikes/stations?network_id=${networkId}`);
         if (!response.ok) throw new Error('Failed to fetch stations');
-        const data = JSON.parse(response);
-        if (data) {
-            displayStations(data);
+        
+        const data = await response.json();
+        if (data && data.stations) {
+            displayStations(data.stations);
         }
     } catch (error) {
         console.error('Error fetching stations:', error);
